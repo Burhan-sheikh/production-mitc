@@ -39,6 +39,7 @@ interface Settings {
   saturdayClose: string;
   sundayOpen: string;
   sundayClose: string;
+  [key: string]: string; // Index signature to allow dynamic string keys
 }
 
 export default function SettingsPage() {
