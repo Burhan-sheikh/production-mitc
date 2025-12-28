@@ -16,9 +16,6 @@ const nextConfig: NextConfig = {
     unoptimized: false, // Let Next.js optimize
   },
 
-  // Optimize for production
-  swcMinify: true,
-
   // Enable experimental features that work with Netlify
   experimental: {
     // Use App Router (already using it)
