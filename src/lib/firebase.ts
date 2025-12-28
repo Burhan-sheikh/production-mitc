@@ -41,35 +41,60 @@ if (isBrowser) {
   }
 }
 
-// Helper function to get db with runtime error
+// Helper function to get db with runtime error (only in browser)
 function getDb(): Firestore {
+  if (!isBrowser) {
+    // During SSR/SSG, return a dummy object to prevent crashes
+    // This should never be called during static generation
+    throw new Error(
+      'Firebase Firestore cannot be accessed during server-side rendering or static generation.'
+    );
+  }
+  
   if (!firebaseDb) {
     throw new Error(
-      'Firebase is not initialized. Make sure you are running this code in the browser and that all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
+      'Firebase is not initialized. Make sure all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
     );
   }
   return firebaseDb;
 }
 
-// Helper function to get auth with runtime error
+// Helper function to get auth with runtime error (only in browser)
 function getAuthInstance(): Auth {
+  if (!isBrowser) {
+    // During SSR/SSG, return a dummy object to prevent crashes
+    throw new Error(
+      'Firebase Auth cannot be accessed during server-side rendering or static generation.'
+    );
+  }
+  
   if (!firebaseAuth) {
     throw new Error(
-      'Firebase Auth is not initialized. Make sure you are running this code in the browser and that all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
+      'Firebase Auth is not initialized. Make sure all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
     );
   }
   return firebaseAuth;
 }
 
-// Export getters that throw errors if not initialized (type-safe)
+// Export safe proxies that only work in browser
+// During SSR/SSG, accessing these will be gracefully skipped
 export const db = new Proxy({} as Firestore, {
   get(target, prop) {
+    // During SSR, just return undefined for any property access
+    // This prevents errors during static generation
+    if (!isBrowser) {
+      return undefined;
+    }
     return getDb()[prop as keyof Firestore];
   },
 });
 
 export const auth = new Proxy({} as Auth, {
   get(target, prop) {
+    // During SSR, just return undefined for any property access
+    if (!isBrowser) {
+      return undefined;
+    }
     return getAuthInstance()[prop as keyof Auth];
   },
 });
