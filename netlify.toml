@@ -1,43 +1,20 @@
-# Netlify Configuration for MITC App
-# This ensures the app deploys correctly on Netlify
+# Netlify Configuration for MITC App with Next.js
+# Using @netlify/plugin-nextjs for automatic configuration
 
 [build]
   # Build command - creates optimized production build
   command = "npm run build"
   
-  # Publish directory - where built files go
-  publish = ".next"
-  
-  # Node.js version - match what you use locally
+  # Node.js version
   node_version = "22"
 
-# Netlify Functions and Edge Functions directory
-functions = "netlify/functions"
-
-# Disable automatic rewrites - Next.js handles all routing
-# for the Netlify Next.js plugin
+# Netlify Next.js Runtime Plugin
+# This automatically handles routing, ISR, SSR, and static generation
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Cache control headers
-[[headers]]
-  for = "/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/_next/static/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Cache-Control = "public, max-age=3600, must-revalidate"
-
-# Environment variables
+# Environment variables for production
 [context.production.environment]
-  # Firebase config - add these in Netlify UI
   NEXT_PUBLIC_FIREBASE_API_KEY = "${NEXT_PUBLIC_FIREBASE_API_KEY}"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "${NEXT_PUBLIC_FIREBASE_PROJECT_ID}"
@@ -46,8 +23,8 @@ functions = "netlify/functions"
   NEXT_PUBLIC_FIREBASE_APP_ID = "${NEXT_PUBLIC_FIREBASE_APP_ID}"
   NEXT_PUBLIC_SITE_URL = "${URL}"
 
+# Environment variables for deploy previews
 [context.deploy-preview.environment]
-  # Preview environment variables
   NEXT_PUBLIC_FIREBASE_API_KEY = "${NEXT_PUBLIC_FIREBASE_API_KEY}"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "${NEXT_PUBLIC_FIREBASE_PROJECT_ID}"
@@ -56,8 +33,8 @@ functions = "netlify/functions"
   NEXT_PUBLIC_FIREBASE_APP_ID = "${NEXT_PUBLIC_FIREBASE_APP_ID}"
   NEXT_PUBLIC_SITE_URL = "${DEPLOY_PRIME_URL}"
 
+# Environment variables for branch deploys
 [context.branch-deploy.environment]
-  # Branch preview environment variables
   NEXT_PUBLIC_FIREBASE_API_KEY = "${NEXT_PUBLIC_FIREBASE_API_KEY}"
   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = "${NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN}"
   NEXT_PUBLIC_FIREBASE_PROJECT_ID = "${NEXT_PUBLIC_FIREBASE_PROJECT_ID}"
@@ -65,12 +42,3 @@ functions = "netlify/functions"
   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID = "${NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID}"
   NEXT_PUBLIC_FIREBASE_APP_ID = "${NEXT_PUBLIC_FIREBASE_APP_ID}"
   NEXT_PUBLIC_SITE_URL = "${DEPLOY_PRIME_URL}"
-
-# Security headers
-[[custom_headers]]
-  for = "/*"
-  [custom_headers.values]
-    X-Frame-Options = "SAMEORIGIN"
-    X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
-    Referrer-Policy = "strict-origin-when-cross-origin"
