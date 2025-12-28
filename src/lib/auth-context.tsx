@@ -9,7 +9,8 @@ interface UserData extends User {
   role?: 'user' | 'admin';
   name?: string;
   phone?: string;
-  photoURL?: string;
+  // photoURL must match Firebase User type: string | null (not string | undefined)
+  photoURL: string | null;
 }
 
 interface AuthContextType {
@@ -37,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             role: userData?.role || 'user',
             name: userData?.name || authUser.displayName || '',
             phone: userData?.phone || '',
-            photoURL: userData?.photoURL || authUser.photoURL || '',
+            photoURL: userData?.photoURL || authUser.photoURL || null,
           });
         } catch (error) {
           console.error('Error fetching user data:', error);
