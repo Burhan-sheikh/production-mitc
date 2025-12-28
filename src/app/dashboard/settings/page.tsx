@@ -9,46 +9,13 @@ import toast from 'react-hot-toast';
 
 type SettingsTab = 'seo' | 'business' | 'hours' | 'password';
 
-interface Settings {
-  siteTitle: string;
-  metaDescription: string;
-  ogImageUrl: string;
-  salesPersonName: string;
-  salesPersonEmail: string;
-  salesPersonPhone: string;
-  whatsappLink: string;
-  instagramUrl: string;
-  facebookUrl: string;
-  twitterUrl: string;
-  linkedinUrl: string;
-  summerStart: string;
-  summerEnd: string;
-  winterStart: string;
-  winterEnd: string;
-  mondayOpen: string;
-  mondayClose: string;
-  tuesdayOpen: string;
-  tuesdayClose: string;
-  wednesdayOpen: string;
-  wednesdayClose: string;
-  thursdayOpen: string;
-  thursdayClose: string;
-  fridayOpen: string;
-  fridayClose: string;
-  saturdayOpen: string;
-  saturdayClose: string;
-  sundayOpen: string;
-  sundayClose: string;
-  [key: string]: string; // Index signature to allow dynamic string keys
-}
-
 export default function SettingsPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const { settings, updateSettings } = useSettings();
   const [activeTab, setActiveTab] = useState<SettingsTab>('seo');
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState<Partial<Settings>>(settings || {});
+  const [formData, setFormData] = useState<any>(settings || {});
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [passwordData, setPasswordData] = useState({
     current: '',
@@ -73,7 +40,7 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      await updateSettings(formData as Settings);
+      await updateSettings(formData);
       toast.success('Settings saved successfully!');
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -210,14 +177,24 @@ export default function SettingsPage() {
         {activeTab === 'business' && (
           <div className="space-y-8">
             <div className="card p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Sales Person Details</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Business Details</h2>
               <div className="space-y-6 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Business Name</label>
                   <input
                     type="text"
-                    value={formData.salesPersonName || ''}
-                    onChange={(e) => setFormData({ ...formData, salesPersonName: e.target.value })}
+                    value={formData.businessName || ''}
+                    onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                    placeholder="Your Business Name"
+                    className="input-field w-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Salesperson Name</label>
+                  <input
+                    type="text"
+                    value={formData.salespersonName || ''}
+                    onChange={(e) => setFormData({ ...formData, salespersonName: e.target.value })}
                     placeholder="Your Name"
                     className="input-field w-full"
                   />
@@ -226,8 +203,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
-                    value={formData.salesPersonEmail || ''}
-                    onChange={(e) => setFormData({ ...formData, salesPersonEmail: e.target.value })}
+                    value={formData.email || ''}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="email@example.com"
                     className="input-field w-full"
                   />
@@ -236,8 +213,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                   <input
                     type="tel"
-                    value={formData.salesPersonPhone || ''}
-                    onChange={(e) => setFormData({ ...formData, salesPersonPhone: e.target.value })}
+                    value={formData.phone || ''}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+91 XXXXX XXXXX"
                     className="input-field w-full"
                   />
@@ -265,8 +242,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Instagram</label>
                   <input
                     type="url"
-                    value={formData.instagramUrl || ''}
-                    onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                    value={formData.instagram || ''}
+                    onChange={(e) => setFormData({ ...formData, instagram: e.target.value })}
                     placeholder="https://instagram.com/..."
                     className="input-field w-full"
                   />
@@ -275,8 +252,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Facebook</label>
                   <input
                     type="url"
-                    value={formData.facebookUrl || ''}
-                    onChange={(e) => setFormData({ ...formData, facebookUrl: e.target.value })}
+                    value={formData.facebook || ''}
+                    onChange={(e) => setFormData({ ...formData, facebook: e.target.value })}
                     placeholder="https://facebook.com/..."
                     className="input-field w-full"
                   />
@@ -285,8 +262,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Twitter/X</label>
                   <input
                     type="url"
-                    value={formData.twitterUrl || ''}
-                    onChange={(e) => setFormData({ ...formData, twitterUrl: e.target.value })}
+                    value={formData.twitter || ''}
+                    onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
                     placeholder="https://twitter.com/..."
                     className="input-field w-full"
                   />
@@ -295,8 +272,8 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn</label>
                   <input
                     type="url"
-                    value={formData.linkedinUrl || ''}
-                    onChange={(e) => setFormData({ ...formData, linkedinUrl: e.target.value })}
+                    value={formData.linkedin || ''}
+                    onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
                     placeholder="https://linkedin.com/..."
                     className="input-field w-full"
                   />
@@ -315,75 +292,98 @@ export default function SettingsPage() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Working Hours</h2>
             <div className="space-y-6 mb-8">
               <div className="bg-blue-50 border border-blue-200 rounded p-4">
-                <h3 className="font-semibold text-blue-900 text-sm">Seasonal Presets</h3>
+                <h3 className="font-semibold text-blue-900 text-sm">Summer Hours</h3>
                 <div className="grid grid-cols-2 gap-4 mt-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Summer Start</label>
-                    <input
-                      type="date"
-                      value={formData.summerStart || ''}
-                      onChange={(e) => setFormData({ ...formData, summerStart: e.target.value })}
-                      className="input-field text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Summer End</label>
-                    <input
-                      type="date"
-                      value={formData.summerEnd || ''}
-                      onChange={(e) => setFormData({ ...formData, summerEnd: e.target.value })}
-                      className="input-field text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Winter Start</label>
-                    <input
-                      type="date"
-                      value={formData.winterStart || ''}
-                      onChange={(e) => setFormData({ ...formData, winterStart: e.target.value })}
-                      className="input-field text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">Winter End</label>
-                    <input
-                      type="date"
-                      value={formData.winterEnd || ''}
-                      onChange={(e) => setFormData({ ...formData, winterEnd: e.target.value })}
-                      className="input-field text-sm"
-                    />
-                  </div>
+                  {formData.workingHours?.summer && Object.entries(formData.workingHours.summer).map(([day, hours]: any) => (
+                    <div key={`summer-${day}`}>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{day}</label>
+                      <div className="flex gap-2">
+                        <input
+                          type="time"
+                          value={hours.open || '09:00'}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              workingHours: {
+                                ...formData.workingHours,
+                                summer: {
+                                  ...formData.workingHours.summer,
+                                  [day]: { ...hours, open: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="input-field text-sm flex-1"
+                        />
+                        <span className="text-gray-500 text-xs pt-2">to</span>
+                        <input
+                          type="time"
+                          value={hours.close || '18:00'}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              workingHours: {
+                                ...formData.workingHours,
+                                summer: {
+                                  ...formData.workingHours.summer,
+                                  [day]: { ...hours, close: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="input-field text-sm flex-1"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="border-t pt-6">
-                <h3 className="font-semibold text-gray-900 text-sm mb-4">Daily Schedule</h3>
-                <div className="space-y-4">
-                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => {
-                    const dayKey = day.toLowerCase() as any;
-                    return (
-                      <div key={day} className="flex items-center gap-4">
-                        <label className="w-20 text-sm font-medium text-gray-700">{day}</label>
+              <div className="bg-blue-50 border border-blue-200 rounded p-4">
+                <h3 className="font-semibold text-blue-900 text-sm">Winter Hours</h3>
+                <div className="grid grid-cols-2 gap-4 mt-3">
+                  {formData.workingHours?.winter && Object.entries(formData.workingHours.winter).map(([day, hours]: any) => (
+                    <div key={`winter-${day}`}>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{day}</label>
+                      <div className="flex gap-2">
                         <input
                           type="time"
-                          value={formData[`${dayKey}Open`] || ''}
-                          onChange={(e) =>
-                            setFormData({ ...formData, [`${dayKey}Open`]: e.target.value })
-                          }
-                          className="input-field text-sm"
+                          value={hours.open || '09:00'}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              workingHours: {
+                                ...formData.workingHours,
+                                winter: {
+                                  ...formData.workingHours.winter,
+                                  [day]: { ...hours, open: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="input-field text-sm flex-1"
                         />
-                        <span className="text-gray-500">to</span>
+                        <span className="text-gray-500 text-xs pt-2">to</span>
                         <input
                           type="time"
-                          value={formData[`${dayKey}Close`] || ''}
-                          onChange={(e) =>
-                            setFormData({ ...formData, [`${dayKey}Close`]: e.target.value })
-                          }
-                          className="input-field text-sm"
+                          value={hours.close || '17:00'}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              workingHours: {
+                                ...formData.workingHours,
+                                winter: {
+                                  ...formData.workingHours.winter,
+                                  [day]: { ...hours, close: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="input-field text-sm flex-1"
                         />
                       </div>
-                    );
-                  })}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
