@@ -11,28 +11,73 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Only initialize Firebase if we have the required config
-// This prevents build-time errors when env vars aren't available
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let db: Firestore | undefined;
+// Helper to check if we're in a browser environment
+const isBrowser = typeof window !== 'undefined';
 
-if (typeof window !== 'undefined') {
-  // Client-side only initialization
+// Initialize Firebase (only in browser)
+let firebaseApp: FirebaseApp | null = null;
+let firebaseAuth: Auth | null = null;
+let firebaseDb: Firestore | null = null;
+
+if (isBrowser) {
   if (!firebaseConfig.apiKey) {
-    console.warn('Firebase config missing. Please set NEXT_PUBLIC_FIREBASE_* environment variables.');
+    console.warn(
+      'Firebase config missing. Please set NEXT_PUBLIC_FIREBASE_* environment variables.'
+    );
   } else {
-    // Initialize Firebase app (only once)
-    if (!getApps().length) {
-      app = initializeApp(firebaseConfig);
-    } else {
-      app = getApps()[0];
+    try {
+      // Initialize Firebase app (only once)
+      if (!getApps().length) {
+        firebaseApp = initializeApp(firebaseConfig);
+      } else {
+        firebaseApp = getApps()[0];
+      }
+
+      firebaseAuth = getAuth(firebaseApp);
+      firebaseDb = getFirestore(firebaseApp);
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
     }
-    
-    auth = getAuth(app);
-    db = getFirestore(app);
   }
 }
 
-export { auth, db, app };
-export default app;
+// Helper function to get db with runtime error
+function getDb(): Firestore {
+  if (!firebaseDb) {
+    throw new Error(
+      'Firebase is not initialized. Make sure you are running this code in the browser and that all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
+    );
+  }
+  return firebaseDb;
+}
+
+// Helper function to get auth with runtime error
+function getAuthInstance(): Auth {
+  if (!firebaseAuth) {
+    throw new Error(
+      'Firebase Auth is not initialized. Make sure you are running this code in the browser and that all NEXT_PUBLIC_FIREBASE_* environment variables are set.'
+    );
+  }
+  return firebaseAuth;
+}
+
+// Export getters that throw errors if not initialized (type-safe)
+export const db = new Proxy({} as Firestore, {
+  get(target, prop) {
+    return getDb()[prop as keyof Firestore];
+  },
+});
+
+export const auth = new Proxy({} as Auth, {
+  get(target, prop) {
+    return getAuthInstance()[prop as keyof Auth];
+  },
+});
+
+// Export app directly (can be null during SSR)
+export const app = firebaseApp;
+
+// Export the raw instances for advanced use cases
+export { firebaseApp, firebaseAuth, firebaseDb };
+
+export default firebaseApp;
