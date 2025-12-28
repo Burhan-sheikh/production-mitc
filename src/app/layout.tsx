@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Provider } from './provider';
 import Header from '@/components/Header';
-import FloatingButtons from '@/components/FloatingButtons';
+import { FloatingButtons } from '@/components/FloatingButtons';
 import Footer from '@/components/Footer';
 import './globals.css';
 
