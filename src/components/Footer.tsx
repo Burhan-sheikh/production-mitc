@@ -52,29 +52,29 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-3">Contact</h4>
             <ul className="text-sm space-y-2">
-              {settings?.salesPersonPhone && (
+              {settings?.phone && (
                 <li>
                   <a
-                    href={`tel:${settings.salesPersonPhone}`}
+                    href={`tel:${settings.phone}`}
                     className="hover:text-primary-400 transition"
                   >
-                    📁 {settings.salesPersonPhone}
+                    📞 {settings.phone}
                   </a>
                 </li>
               )}
-              {settings?.salesPersonEmail && (
+              {settings?.email && (
                 <li>
                   <a
-                    href={`mailto:${settings.salesPersonEmail}`}
+                    href={`mailto:${settings.email}`}
                     className="hover:text-primary-400 transition"
                   >
-                    ✉️ {settings.salesPersonEmail}
+                    ✉️ {settings.email}
                   </a>
                 </li>
               )}
               <li>
                 <Link href="/contact" className="hover:text-primary-400 transition">
-                  📏 Send Message
+                  💬 Send Message
                 </Link>
               </li>
             </ul>
@@ -84,9 +84,9 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-3">Follow Us</h4>
             <div className="flex gap-4">
-              {settings?.instagramUrl && (
+              {settings?.instagram && (
                 <a
-                  href={settings.instagramUrl}
+                  href={settings.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary-400 transition"
@@ -95,9 +95,9 @@ export default function Footer() {
                   📸
                 </a>
               )}
-              {settings?.facebookUrl && (
+              {settings?.facebook && (
                 <a
-                  href={settings.facebookUrl}
+                  href={settings.facebook}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary-400 transition"
@@ -106,20 +106,20 @@ export default function Footer() {
                   f
                 </a>
               )}
-              {settings?.twitterUrl && (
+              {settings?.twitter && (
                 <a
-                  href={settings.twitterUrl}
+                  href={settings.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary-400 transition"
                   title="Twitter"
                 >
-                  🐦
+                  𝕏
                 </a>
               )}
-              {settings?.linkedinUrl && (
+              {settings?.linkedin && (
                 <a
-                  href={settings.linkedinUrl}
+                  href={settings.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-primary-400 transition"
