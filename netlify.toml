@@ -1,5 +1,5 @@
 # Netlify Configuration for MITC App
-# This ensures the app deploys correctly on Netlify Free Plan
+# This ensures the app deploys correctly on Netlify
 
 [build]
   # Build command - creates optimized production build
@@ -8,15 +8,16 @@
   # Publish directory - where built files go
   publish = ".next"
   
-  # Node.js version
-  node_version = "18"
+  # Node.js version - match what you use locally
+  node_version = "22"
 
-# Redirect all routes to Next.js for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
+# Netlify Functions and Edge Functions directory
+functions = "netlify/functions"
+
+# Disable automatic rewrites - Next.js handles all routing
+# for the Netlify Next.js plugin
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Cache control headers
 [[headers]]
@@ -65,7 +66,7 @@
   NEXT_PUBLIC_FIREBASE_APP_ID = "${NEXT_PUBLIC_FIREBASE_APP_ID}"
   NEXT_PUBLIC_SITE_URL = "${DEPLOY_PRIME_URL}"
 
-# Error pages
+# Security headers
 [[custom_headers]]
   for = "/*"
   [custom_headers.values]
